@@ -1,0 +1,26 @@
+name: Import source snapshot
+on:
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Verify and import the prepared source commit
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "5518d7c5138f5c73cf8e6b70c608049eda8361972eaa7c7df0974e344b501e63  orion-source-import.bundle" | sha256sum --check
+          git bundle verify orion-source-import.bundle
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch ./orion-source-import.bundle main
+          git merge --no-commit --allow-unrelated-histories FETCH_HEAD
+          git rm -- .github/workflows/build.yml
+          git rm -- orion-source-import.bundle
+          git commit -m "Import complete Orion Client project and retain source history"
+          git push origin HEAD:main
