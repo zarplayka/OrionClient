@@ -1,0 +1,27 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "ru.orion.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "FontMixin",
+    "GuiGraphicsExtractorMixin",
+    "GuiGraphicsExtractorAccessor",
+    "GuiRendererGlassMixin",
+    "HudScoreboardGlassMixin",
+    "ChatGraphicsAccessMixin",
+    "ChatComponentMixin",
+    "PlayerTabOverlayMixin",
+    "ProjectionMixin",
+    "SkyRendererMixin",
+    "FogRendererMixin",
+    "MultiPlayerGameModeMixin",
+    "RenderPipelinesAccessor",
+    "EntityHitboxDebugRendererMixin",
+    "ScreenEffectRendererMixin",
+    "EntityRendererFireMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

@@ -1,0 +1,59 @@
+Orion Client Proprietary License
+
+Copyright (c) 2026 ZARPLAY (GitHub: zarplayka).
+All rights reserved.
+
+1. Scope and ownership
+
+This license applies only to original Orion Client code, documentation, and
+assets for which the copyright holder owns the relevant rights. No ownership
+of third-party material is claimed. Third-party components and dependencies,
+including Minecraft, Fabric, Gradle, and Microsoft components, remain subject
+to their respective licenses and notices.
+
+2. Use of official releases
+
+You may download, install, run, and make personal backup copies of unmodified
+official Orion Client releases obtained from distribution channels authorized
+by the copyright holder. This permission does not transfer ownership or grant
+permission to redistribute the software or its source code.
+
+3. Reserved rights
+
+Except for the permissions expressly granted here, or as required by applicable
+law, you may not copy, modify, redistribute, sublicense, sell, rebrand, or create
+or distribute derivative works of the covered material without prior written
+permission from the copyright holder. This includes extracting or reusing
+covered code or assets in another project. Providing credit alone is not
+permission. You must not remove copyright or license notices or falsely claim
+authorship of covered material.
+
+Access to source code, including source files embedded in a release JAR, is not
+a general license to reuse, modify, redistribute, or publish that code.
+
+4. Security review and reproducible-build exception
+
+The Modrinth Content Moderation Team and reviewers expressly authorized by the
+copyright holder may inspect the source code and binaries, make private copies,
+compile and execute them in a review environment, and make private changes
+strictly necessary to audit security or verify reproducible builds. They may
+retain review records and share material with other authorized reviewers for
+these purposes. This exception does not permit publishing or redistributing
+the source code or compiled outputs as a separate product.
+
+Hosting and continuous-integration providers used by the copyright holder may
+store, copy, build, and deliver covered material as needed to provide the
+services requested by the copyright holder. Modrinth may host and distribute
+official releases submitted by the copyright holder under its platform terms.
+
+5. Third-party rights and applicable law
+
+These restrictions do not override third-party licenses, mandatory legal rights,
+or applicable exceptions to copyright. No trademark or patent rights are granted.
+
+6. Disclaimer
+
+TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THE SOFTWARE IS PROVIDED
+"AS IS", WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED. THE COPYRIGHT
+HOLDER IS NOT LIABLE FOR CLAIMS OR DAMAGES ARISING FROM USE OF THE SOFTWARE,
+EXCEPT WHERE SUCH LIABILITY CANNOT LAWFULLY BE EXCLUDED.

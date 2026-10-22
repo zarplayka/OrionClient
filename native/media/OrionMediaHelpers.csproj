@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <HelperName Condition="'$(HelperName)' == ''">OrionThumbnail</HelperName>
+    <AssemblyName>$(HelperName)</AssemblyName>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <Prefer32Bit>false</Prefer32Bit>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <EnableSourceControlManagerQueries>false</EnableSourceControlManagerQueries>
+    <EnableSourceLink>false</EnableSourceLink>
+    <Deterministic>true</Deterministic>
+    <DebugType>none</DebugType>
+    <PathMap>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)/../..'))=/_/orion</PathMap>
+    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+    <AutomaticallyUseReferenceAssemblyPackages>false</AutomaticallyUseReferenceAssemblyPackages>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies.net48" Version="1.0.3" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Windows.SDK.Contracts" Version="10.0.26100.1" GeneratePathProperty="true" ExcludeAssets="all" PrivateAssets="all" />
+    <Reference Include="System.Runtime" />
+    <Reference Include="$(PkgMicrosoft_Windows_SDK_Contracts)/ref/netstandard2.0/*.winmd">
+      <Private>false</Private>
+    </Reference>
+    <Compile Include="../../src/main/resources/assets/orion-client/orion-thumbnail.cs" Condition="'$(HelperName)' == 'OrionThumbnail'" />
+    <Compile Include="../../src/main/resources/assets/orion-client/orion-volume.cs" Condition="'$(HelperName)' == 'OrionVolume'" />
+  </ItemGroup>
+</Project>
