@@ -1,0 +1,30 @@
+# Локальные сборки и кеши
+/.gradle/
+/build/
+/out/
+/native/media/bin/
+/native/media/obj/
+
+# Игровые данные, логи и локальные инструменты
+/run/
+/logs/
+/.playwright-cli/
+/graphify-out/
+/design/
+
+# Чужой референс-клиент не входит в Orion Client
+/sources/
+
+# Настройки IDE и локальные секреты
+/.idea/
+/.vscode/
+*.iml
+/.env
+/.env.*
+/local.properties
+*.key
+*.pem
+*.p12
+*.pfx
+Thumbs.db
+.DS_Store

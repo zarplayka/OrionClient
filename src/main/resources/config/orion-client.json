@@ -1,0 +1,12 @@
+{
+  "hudEnabled": true,
+  "scoreboardGlassEnabled": true,
+  "hudX": 8,
+  "hudY": 8,
+  "hudScale": 1.0,
+  "accentColor": "#FF7C00",
+  "discordRpcEnabled": true,
+  "discordApplicationId": "1520703983163932832",
+  "discordLargeImageKey": "orion_icon",
+  "discordLargeImageText": "Orion Client"
+}

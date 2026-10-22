@@ -1,0 +1,60 @@
+name: Verified release build
+
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-2025
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '25'
+      - uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: native/media/global.json
+      - name: Build mod and verify media helper reproducibility
+        shell: pwsh
+        run: |
+          ./gradlew.bat build --no-daemon
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify helpers inside the release JAR and create source archive
+        shell: pwsh
+        run: |
+          $jar = Get-ChildItem build/libs/*.jar | Where-Object { $_.Name -notmatch '-(sources|dev)\.jar$' }
+          if (@($jar).Count -ne 1) { throw 'Expected exactly one release JAR' }
+          $inspection = New-Item -ItemType Directory -Force build/inspection
+          Push-Location $inspection
+          try { & jar xf $jar.FullName } finally { Pop-Location }
+          if ($LASTEXITCODE -ne 0) { throw 'JAR extraction failed' }
+          $packaged = 'build/inspection/assets/orion-client/media'
+          foreach ($line in Get-Content "$packaged/SHA256SUMS") {
+            $hash, $name = $line -split '  ', 2
+            if ((Get-FileHash "$packaged/$name" -Algorithm SHA256).Hash.ToLowerInvariant() -ne $hash) {
+              throw "Packaged helper checksum mismatch: $name"
+            }
+          }
+          Compress-Archive -Path build/inspection/META-INF/orion-media-source/* -DestinationPath build/libs/orion-media-source.zip -Force
+          # Повторная сборка из тех исходников, которые действительно попали в JAR
+          & ./build/inspection/META-INF/orion-media-source/native/media/build.ps1 -OutputDirectory "$pwd/build/rebuilt-media"
+          if ((Get-Content build/rebuilt-media/SHA256SUMS -Raw) -cne (Get-Content "$packaged/SHA256SUMS" -Raw)) {
+            throw 'Packaged sources do not reproduce packaged media helpers'
+          }
+          Copy-Item "$packaged/SHA256SUMS" build/libs/media-SHA256SUMS
+          Get-ChildItem build/libs/*.jar | Get-FileHash -Algorithm SHA256 | Format-Table -AutoSize
+      - uses: actions/upload-artifact@v4
+        with:
+          name: orion-client-verified
+          path: |
+            build/libs/*.jar
+            build/libs/orion-media-source.zip
+            build/libs/media-SHA256SUMS
+          if-no-files-found: error

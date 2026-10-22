@@ -1,0 +1,78 @@
+plugins {
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+    archivesName = project.archives_base_name
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${minecraft_version}"
+    implementation "net.fabricmc:fabric-loader:${loader_version}"
+    implementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
+}
+
+// Помощники собираются при разработке/в CI и попадают в JAR уже готовыми
+def mediaHelpersResources = providers.gradleProperty('mediaHelpersDir')
+        .map { layout.projectDirectory.dir(it) }
+        .orElse(layout.buildDirectory.dir('generated/mediaResources'))
+tasks.register('buildMediaHelpers', Exec) {
+    onlyIf { !providers.gradleProperty('mediaHelpersDir').isPresent() }
+    inputs.files(fileTree('native/media') { exclude 'bin/**', 'obj/**' })
+    inputs.files('src/main/resources/assets/orion-client/orion-thumbnail.cs',
+            'src/main/resources/assets/orion-client/orion-volume.cs')
+    outputs.dir(mediaHelpersResources)
+    commandLine 'powershell.exe', '-NoProfile', '-File', file('native/media/build.ps1').absolutePath
+}
+
+processResources {
+    dependsOn tasks.named('buildMediaHelpers')
+    from(mediaHelpersResources)
+    doFirst {
+        ['OrionThumbnail.exe', 'OrionVolume.exe', 'SHA256SUMS'].each { name ->
+            if (!mediaHelpersResources.get().file("assets/orion-client/media/${name}").asFile.isFile()) {
+                throw new GradleException("Missing media helper ${name}; run native/media/build.ps1 first")
+            }
+        }
+    }
+    inputs.property "version", project.version
+
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = 'UTF-8'
+    it.options.release = 25
+}
+
+java {
+    withSourcesJar()
+
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
+}
+
+jar {
+    inputs.property "archivesName", project.base.archivesName
+
+    from("LICENSE") {
+        rename { "${it}_${inputs.properties.archivesName}" }
+    }
+    from('native/media') {
+        include '*.csproj', 'global.json', 'packages.lock.json', 'build.ps1', 'README.md'
+        into 'META-INF/orion-media-source/native/media'
+    }
+    from('LICENSE') {
+        into 'META-INF/orion-media-source'
+    }
+    from('src/main/resources/assets/orion-client') {
+        include 'orion-thumbnail.cs', 'orion-volume.cs'
+        into 'META-INF/orion-media-source/src/main/resources/assets/orion-client'
+    }
+}
