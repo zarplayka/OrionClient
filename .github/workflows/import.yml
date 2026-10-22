@@ -20,7 +20,8 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git fetch ./orion-source-import.bundle main
           git merge --no-commit --allow-unrelated-histories FETCH_HEAD
-          git rm -- .github/workflows/build.yml
+          git rm --cached -- .github/workflows/build.yml
           git rm -- orion-source-import.bundle
           git commit -m "Import complete Orion Client project and retain source history"
           git push origin HEAD:main
+
